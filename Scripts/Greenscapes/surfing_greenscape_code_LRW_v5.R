@@ -1,9 +1,9 @@
-<<<<<<< HEAD
+
 #----------------------#
 # set up ####
-=======
 
->>>>>>> 9605e3547365d84361c22ed0d15aa960ff551bbe
+
+
 
 #ATTN:: Skip to Reproducible below here chunk 
 
@@ -41,30 +41,29 @@ keep <- Spring.summary %>% group_by(AID) %>% summarise(n = n_distinct(id_yr)) %>
 
 rdh_data.sf <- rdh_data.sf %>% dplyr::filter(id_yr %in% keep$id_yr)
 
-<<<<<<< HEAD
 
 
-=======
->>>>>>> 9605e3547365d84361c22ed0d15aa960ff551bbe
+
+
 # rm(list=ls()[! ls() %in% c("irg.params", "indvi","dlcparams.wd")])
 
 # load("C:/Users/lwilde2/Documents/AdaptiveFidelity/Data/Processed Data/Stopover Fidelity/FidelityMetrics_04092023.RData")
 
 #keep only those that are in the fidelity analysis
-<<<<<<< HEAD
+
 dataset <- rdh_data.sf %>% arrange(id_yr, POSIXct) #%>% dplyr::filter(id_yr %in% unique(so_fidelity$id_yr))
 rm(rdh_data.sf)
-=======
-dataset <- mig.SpringMigration.sf %>% arrange(id_yr, POSIXct) #%>% dplyr::filter(id_yr %in% unique(so_fidelity$id_yr))
 
->>>>>>> 9605e3547365d84361c22ed0d15aa960ff551bbe
+
+
+
 
 #check
 length(unique(dataset$id_yr)); length(unique(dataset$AID))
 
 
 #create max.meters object
-<<<<<<< HEAD
+
 
 #ATTN: make sure this is referencing dist by march 21, not Jan 1 -- ie 80
 
@@ -75,12 +74,7 @@ for(i in 1:length(unique(dataset$id_yr))){ #length(unique(dataset$id_yr))
   #i = 1
 tmp.data <- dataset %>% arrange(id_yr, POSIXct) %>% filter(id_yr == unique(dataset$id_yr)[i]) 
 dist <- max(st_distance(x = tmp.data, y = tmp.data[which(tmp.data$JDate %in% 80),], by_element = F) %>% as.numeric())
-=======
-max.meters.vec <- data.frame(dist = NA, id_yr = NA)
-for(i in 1:length(unique(dataset$id_yr))){
-tmp.data <- dataset %>% arrange(id_yr, POSIXct) %>% filter(id_yr == unique(dataset$id_yr)[i]) 
-dist <- st_distance(x = tmp.data[nrow(tmp.data), ], y = tmp.data[1,], by_element = T) %>% as.numeric()
->>>>>>> 9605e3547365d84361c22ed0d15aa960ff551bbe
+
 
 t <- data.frame(dist = dist, id_yr = unique(dataset$id_yr)[i])
 
@@ -92,10 +86,9 @@ rm(dist, t)
 }
 
 names(max.meters.vec)[1] <- "max.meters"
-<<<<<<< HEAD
+
 max.meters.vec <- max.meters.vec[-1,]
-=======
->>>>>>> 9605e3547365d84361c22ed0d15aa960ff551bbe
+
 head(max.meters.vec)
 max.meters.all <- max(max.meters.vec$max.meters)
 
@@ -300,11 +293,10 @@ unique(gps.data$AY_ID)
 # 
 # save(indviAll_lite, xmidsAll_lite, xmids_SDAll_lite, scalSAll_lite, file = "G:/Shared drives/wyo-coop-wilde/NDVI_Calcs/Aikens_greenscape/dlc_params_2014to2022_lite_latlon.RData")
 
-<<<<<<< HEAD
-#save.image("C:/Users/lwilde2/Documents/AdaptiveFidelity/Data/Processed Data/Greenscape/InputData_20230414.RData")
-=======
+
+
 #save.image("C:/Users/lwilde2/Documents/AdaptiveFidelity/Data/Processed Data/Greenscape/InputDataExcept_20230414.RData")
->>>>>>> 9605e3547365d84361c22ed0d15aa960ff551bbe
+
 
 #this is where the bischof calc layers are stored!
 
@@ -319,7 +311,7 @@ BischCalcs.ll <- "G:/Shared drives/wyo-coop-wilde/NDVI_Calcs/Aikens_greenscape/d
 
 
 #these are the data
-<<<<<<< HEAD
+
 load("C:/Users/lwilde2/Documents/AdaptiveFidelity/Data/Processed Data/Greenscape/InputData_20230414.RData")
 
 
@@ -525,10 +517,10 @@ library(mapview)
 
 #----------------------------------#
 # Start For Loop ####
-=======
+
 load("C:/Users/lwilde2/Documents/AdaptiveFidelity/Data/Processed Data/Greenscape/InputDataExcept_20230414.RData")
 
->>>>>>> 9605e3547365d84361c22ed0d15aa960ff551bbe
+
 
 
 
@@ -537,7 +529,7 @@ load("C:/Users/lwilde2/Documents/AdaptiveFidelity/Data/Processed Data/Greenscape
 #-----------------------------------#
 #clear memory space
 gc()
-<<<<<<< HEAD
+
 rm(list=ls()[! ls() %in% c("d", "dataset", "gps.data", "AY_ID", "metaSurf.i", "metaSurf", "max.meters.vec", "cut.off","loc","BischCalcs","BischCalcs.ll","colPalIRG","max.meters.all")])
 gc()
 source(loc)
@@ -690,170 +682,7 @@ metaSurf.i<-data.frame(AnimalID=gps.data.ay$id[1],
 
 
 metaSurf<-rbind(metaSurf, metaSurf.i)
-=======
-rm(list=ls()[! ls() %in% c("d", "dataset", "gps.data", "AY_ID", "metaSurf.i", "metaSurf", "max.meters.vec", "cut.off","loc","BischCalcs","BischCalcs.ll","colPalIRG")])
-gc()
-source(loc)
 
-for(i in 14:35){#
-  #i = 5
-  
-  tryCatch({
-  
-  # dlcparams.wd<-"Z:/MODIS_NDVI/Bischof_calculations"
-  # setwd(dlcparams.wd)
-  
-  year<-strsplit(as.character(AY_ID[i]), "_")[[1]][2]
-  ny <- as.numeric(strsplit(as.character(AY_ID[i]), "_")[[1]][2])-2013
-  #yearn <- as.numeric(year)
-  
-  #if(year>=2001 & year<=2022){
-   
-    load(BischCalcs) #here is where you can load in the raster stacks
-    
-     #get IRG data
-    irg.max.day<-xmidsAll[[ny]]
-    spring.scale<-scalSAll[[ny]]
-    sd.irgDate<-xmids_SDAll[[ny]]
-    ndvi<-indviAll[[ny]]
-    #names(ndvi)
-    irg.max.day #inspect
-    
-    rm(xmidsAll,scalSAll,xmids_SDAll,indviAll) #remove to clear memory space
-    
-    #subset gps data 
-    gps.data.ay <- gps.data[gps.data$AY_ID==AY_ID[i], ]
-    
-   
-    
-    #extract the phenology data 
-    
-    sd.vals<-raster::extract(x=sd.irgDate, gps.data.ay)
-    irg.vals<-raster::extract(x=irg.max.day, gps.data.ay)
-    scale.vals<-raster::extract(x=spring.scale, gps.data.ay)
-    indvi.vals<-raster::extract(x=ndvi, gps.data.ay)
-    
-    rm(ndvi)
-    
-   
-    
-    #filter out really poor fitting IRG curves
-    idx<-which(sd.vals>cut.off)
-    if(length(idx)>0){
-      gps.data.ay<-gps.data.ay[-idx, ]
-      sd.vals<-sd.vals[-idx]
-      irg.vals<-irg.vals[-idx]
-      scale.vals<-scale.vals[-idx]
-      indvi.vals<-indvi.vals[-idx]
-    }
-    
-    #reproject to lat long, important for semivariogram
-    gps.data.ay.ll <- spTransform(gps.data.ay,CRS("+proj=longlat +ellps=WGS84 +no_defs"))
-    
-    #calculate greenscape 
-    greenscapeVals<-getSvGreenscapeVals(spDF=gps.data.ay.ll, 
-                                        irg.vals=irg.vals, 
-                                        scale.vals=scale.vals,
-                                        PlotVariogram=F, 
-                                        saveJPEG=F, 
-                                        dir="C:/Users/lwilde2/Documents/AdaptiveFidelity/Outputs")
-    
-    #calculate surfing 
-    mid.i<-greenscapeVals[6]
-    #used points greenscape 
-    
-    surfingVals120<-getSurfingMetricsVals(spDF=gps.data.ay.ll, 
-                                          irg.vals=irg.vals, 
-                                          scale.vals=scale.vals, 
-                                          startJDay=mid.i-60, endJDay=mid.i+60)
-    
-    
-    #make "availability" buffer
-    # sp.buffer<-max.meters[which(names(max.meters)==species)]
-    sp.buffer<-max.meters.vec[which(max.meters.vec$id_yr == AY_ID[i]),"max.meters"] #could make this iterate for each animal
-    centroid<-apply(coordinates(gps.data.ay.ll), MARGIN=2, FUN=mean, na.rm=T)
-    xy<-data.frame(x=centroid[1], y=centroid[2])
-    row.names(xy)<-AY_ID[i]
-    centroid.sp<-SpatialPointsDataFrame(SpatialPoints(xy), data.frame(ID=as.character(AY_ID[i])))
-    proj4string(centroid.sp)<-CRS("+proj=longlat +ellps=WGS84")
-    centroid.sp<-spTransform(centroid.sp, CRS("+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=23 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0"))
-    circ.sp<-gBuffer(centroid.sp, width=sp.buffer, byid=F)
-    circ.sp<-spTransform(circ.sp, st_crs(irg.max.day)$input)  #here bring it back to sinu projection
-    #was CRS("+proj=longlat +ellps=WGS84")
-    
-    #create blank raster to downsize rasters
-    r <- raster(nrow=dim(irg.max.day)[1]/3, ncol=dim(irg.max.day)[2]/3, ) #downsize raster by 1.5
-    extent(r) <- extent(irg.max.day)
-    projection(r) <- st_crs(irg.max.day)$input
-    
-    #each takes 34 seconds!!
-    #whole code below takes 20 min
-    
-    #landscape-scale greenscape
-    system.time( sp.greensscape<-getSvGreenscapeCirle(circles=circ.sp, 
-                                         irgRaster=resample(irg.max.day, r, method = "bilinear"), 
-                                         scaleRaster=resample(spring.scale, r, method = "bilinear"),
-                                         sdRaster=resample(sd.irgDate, r, method = "bilinear"), sdCutoff=cut.off,
-                                         PlotVariogram=F, plotColors=colPalIRG, saveJPEG=F, 
-                                         dir="C:/Users/lwilde2/Documents/AdaptiveFidelity/Outputs")) #make sure the plot and save are FALSE
-    
-    
-    #put it all together and save it 
-    # add in available greenscape metrics in the dataframe, once species-specific bufers are calculated 
-    metaSurf.i<-data.frame(AnimalID=gps.data.ay$id[1], 
-                           Year=gps.data.ay$year[1], 
-                           AY_ID=AY_ID[i], 
-                           IRG_120=surfingVals120[1], 
-                           DFP_120=surfingVals120[2], 
-                           svSlope=greenscapeVals[1], 
-                           greenUpDur=greenscapeVals[4], 
-                           springScale=greenscapeVals[5], 
-                           SVmax=greenscapeVals[14], 
-                           midpoint=mid.i)
-    
-    
-    
-    metaSurf<-rbind(metaSurf, metaSurf.i)
-    
-    #remove everything but what you need
-    gc()
-    rm(list=ls()[! ls() %in% c("d", "dataset", "gps.data", "AY_ID", "metaSurf.i", "metaSurf", "max.meters.vec", "cut.off","loc","BischCalcs","colPalIRG")])
-    gc()
-    source(loc)
-    
-  }, error=function(e){})
-  
-    
-  }#i
-
-
-head(metaSurf)
-
-
-
-sessionInfo()
-
-
-
-
-
-
-
-
-
-
-
-
-#------------------------------------#
-#parallel version - turns out there is a problem running parallel with Rasters bc it can struggle to recollect tmp files
->>>>>>> 9605e3547365d84361c22ed0d15aa960ff551bbe
-
-# #remove everything but what you need
-# gc()
-# rm(list=ls()[! ls() %in% c("d", "dataset", "gps.data", "AY_ID", "metaSurf.i", "metaSurf", "max.meters.vec", "cut.off","loc","BischCalcs","colPalIRG")])
-# gc()
-# source(loc)
-<<<<<<< HEAD
 
 }, error=function(e){})
 
@@ -871,7 +700,7 @@ meta3 <- metaSurf
 metaSurf
 
 sessionInfo()
-=======
+
 # 
 # no_cores <- detectCores()-1
 # AY_ID <- AY_ID
@@ -1031,10 +860,5 @@ sessionInfo()
 
 #the way to graph is similar to - longer, rapid, consecutive leads to higher foraging penalty, better surfers and predicts animals that migrate
 
->>>>>>> 9605e3547365d84361c22ed0d15aa960ff551bbe
 
 
-
-
-# 
-# 

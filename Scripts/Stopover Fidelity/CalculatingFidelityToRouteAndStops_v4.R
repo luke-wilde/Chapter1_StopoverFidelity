@@ -37,24 +37,25 @@ source("C:/Users/lwilde2/Documents/AdaptiveFidelity/Scripts/Quantifying Fidelity
 
 #load in the datasets
 # Stopovers <- st_read("Data/RD2H_HighUseStopovers_Polygons.shp")
-load("C:/Users/lwilde2/Documents/AdaptiveFidelity/Data/Processed Data/Migrations/RDH_AllMigrations_2014t2022.RData")
+load("C:/Users/lwilde2/Desktop/RDH Database/Processed Data/RDH_AllMigrations_Bischof_2014t2022_20230425.RData")
 
-load("C:/Users/lwilde2/Documents/AdaptiveFidelity/Data/Raw Data/BBMMS/Stopovers/RDH_AllStopovers_2014to2022.RData")
+load("C:/Users/lwilde2/Desktop/RDH Database/Processed Data/RDH_AllStopovers_14t22_20230425.RData")
 
-sa <- st_read("C:/Users/lwilde2/Documents/AdaptiveFidelity/Data/GIS/StudyArea_Polygon_TableMountains.kml") #_TableMountains if you want to include the first SO
+sa <- st_read("C:/Users/lwilde2/Documents/Chapter2_StopoverFidelity/Chapter1_StopoverFidelity/Data/GIS/StudyArea_Polygon_TableMountains.kml") #_TableMountains if you want to include the first SO
 
 setwd("C:/Users/lwilde2/Desktop/RDH Database/RD2H_GPSCollarData/")
-DeerID <- read.table("RD2H_AllDeerIDs_19APRIL2023.csv", header=TRUE, sep=",")
+DeerID <- read.table("RD2H_AllDeerIDs_17APRIL2023.csv", header=TRUE, sep=",")
 #Format date and time columns
 DeerID$StartDate <- as.POSIXct(DeerID$StartDate, format="%m/%d/%Y", origin = "1970-01-01")
 DeerID$StopDate <- as.POSIXct(DeerID$StopDate,format="%m/%d/%Y", origin = "1970-01-01")
 
-DeerID_long <- DeerID %>% filter(Mgtry == "Long") %>% distinct(AID, Mgtry, .keep_all = T) %>% arrange(AID)
-
 #prep the data
 
-#keep only long migrations
+#keep only long migrations for now, will change later
+DeerID_long <- DeerID %>% filter(Mgtry == "Long") %>% distinct(AID, Mgtry, .keep_all = T) %>% arrange(AID)
 data <- mig.SpringMigration.sf %>% filter(AID %in% DeerID_long$AID)
+
+
 #data <- st_as_sf(x = data, coords = c("UTM_E", "UTM_N"), crs = "+proj=utm +zone=12 +ellps=GRS80 +datum=NAD83 +units=m +no_defs")
 
 #get sa to the same
@@ -95,7 +96,7 @@ nrow(data); length(unique(data$AID)); length(unique(data$id_yr))
 
 
 #------------------------------------------------------#
-#### Stopover Fidelity ####
+#### Stopover Status ####
 
 # writes a series of for loops to go through create a blank dataframe and iterate through each id to create a matrix, then can extract what proportion of each of the years points on its own migration stopovers are in the other ones too
 
@@ -165,10 +166,12 @@ nrow(onstop_yr_fin); length(unique(onstop_yr_fin$AID)); length(unique(onstop_yr_
 summary(as.numeric(onstop_yr_fin$TimeStopped))
 onstop_yr_fin$TimeStopped <- as.numeric(onstop_yr_fin$TimeStopped)
 
+setwd("C:/Users/lwilde2/Documents/Chapter2_StopoverFidelity/Chapter1_StopoverFidelity")
+save(onstop_yr_fin, file = "Data/Stopover/RDH_PointsOnStop_14t22_20230425.RData")
 
 #---------------------------------#
 #---------------------------------#
-## ATTN:: the above loses 4 AIDs and 21 id_yr, that are removed bc they lack a numeric stop. Why? ##
+## ATTN:: data drop solved!
 #---------------------------------#
 #---------------------------------#
 

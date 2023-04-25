@@ -22,7 +22,7 @@ library(scales)
 
 #------------------------------------------------------#
 #### load data ####
-load("C:/Users/lwilde2/Desktop/RDH Database/Processed Data/RDH_AllStopovers_14t22_20230425.RData")
+load("C:/Users/lwilde2/Documents/Chapter2_StopoverFidelity/Chapter1_StopoverFidelity/Data/Stopover/RDH_PointsOnStop_14t22_20230425.RData")
 
 test <- SO_all %>% filter(id_yr == "255_2016")
 
@@ -46,16 +46,28 @@ set <- data.frame(xset = runif(n, -xlim, xlim), yset = runif(n, -ylim, ylim))
 set.sf <- set %>% st_as_sf(coords = c("xset", "yset"), crs = proj)
 
 #------------------------------------------------------#
-#### shift ####
+####  ####
+
+
+
+BischCalcs <- "Z:/MODIS_NDVI/NDVI2022/Bischof_calculations/MOD09Q1_"
+
+year <- str_split(test$id_yr[1],"_")[[1]][2]
+
+
+
+#------------------------------------------------------#
+####  ####
 
 shift <- st_as_sf(test$geometry[1] + set.sf$geometry[1], crs = proj)
 orig <- test$geometry[1]
 shift2 <-  st_as_sf(test$geometry[1] + set.sf$geometry[2], crs = proj)
 
+shift <- shift %>% st_cast("POINT")
+
+
 mapview(shift) + mapview(orig) + mapview(shift2)
 
-#------------------------------------------------------#
-####  ####
 
 #------------------------------------------------------#
 ####  ####
