@@ -44,7 +44,7 @@ load("C:/Users/lwilde2/Documents/AdaptiveFidelity/Data/Raw Data/BBMMS/Stopovers/
 sa <- st_read("C:/Users/lwilde2/Documents/AdaptiveFidelity/Data/GIS/StudyArea_Polygon_TableMountains.kml") #_TableMountains if you want to include the first SO
 
 setwd("C:/Users/lwilde2/Desktop/RDH Database/RD2H_GPSCollarData/")
-DeerID <- read.table("RD2H_AllDeerIDs_24MARCH2023.csv", header=TRUE, sep=",")
+DeerID <- read.table("RD2H_AllDeerIDs_19APRIL2023.csv", header=TRUE, sep=",")
 #Format date and time columns
 DeerID$StartDate <- as.POSIXct(DeerID$StartDate, format="%m/%d/%Y", origin = "1970-01-01")
 DeerID$StopDate <- as.POSIXct(DeerID$StopDate,format="%m/%d/%Y", origin = "1970-01-01")
