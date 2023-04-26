@@ -24,12 +24,12 @@ library(scales)
 #### load data ####
 load("C:/Users/lwilde2/Documents/Chapter2_StopoverFidelity/Chapter1_StopoverFidelity/Data/Stopover/RDH_PointsOnStop_14t22_20230425.RData")
 
-test <- SO_all %>% filter(id_yr == "255_2016")
+test <- onstop_yr_fin %>% filter(id_yr == "255_2016")
 
 proj <- "+proj=utm +zone=12 +ellps=WGS84 +datum=WGS84 +units=m +no_defs+towgs84=0,0,0"
 test <- st_transform(test, proj)
 
-test <- test %>% dplyr::filter(layer != 0) %>% st_cast("POLYGON")
+#test <- test 
 
 #------------------------------------------------------#
 #### set up sequence ####
@@ -37,41 +37,49 @@ test <- test %>% dplyr::filter(layer != 0) %>% st_cast("POLYGON")
 set.seed(163)
 
 
-n = 500
-xlim = 2000
-ylim = 2000
+n = 30
+xlim = 5000
+ylim = 5000
 
 set <- data.frame(xset = runif(n, -xlim, xlim), yset = runif(n, -ylim, ylim))
 
 set.sf <- set %>% st_as_sf(coords = c("xset", "yset"), crs = proj)
 
 #------------------------------------------------------#
-####  ####
+#### create available points  ####
+
+# blank <- onstop_yr_fin[0,0]
+# for(i in unique(onstop_yr_fin$id_yr)){
+#   #i = "255_2016"
+#   test <- onstop_yr_fin %>% filter(id_yr == i)
+#   test$flag <- 1
+#   
+# for(j in 1:n){
+#   #j = 4
+#   t <- test %>% dplyr::select(-flag)
+#   x <- st_as_sf(t$geometry + set.sf$geometry[j], crs = proj)
+#   st_geometry(x) <- "geometry"
+#   x$flag <- 0
+#   x <- st_as_sf(cbind(test %>% st_drop_geometry() %>% dplyr::select(names(test)[c(1:22,36:38,40:43)]),x), crs = proj)
+#   blank <- rbind(x,blank)
+#   rm(x)
+#   }#n
+# }#id_yr
+
+length(unique(blank$id_yr))
+length(unique(onstop_yr_fin$id_yr))
+
+save(blank, file = "Data/Stopover/RDH_AlternateStops_20230425.RData")
 
 
 
-BischCalcs <- "Z:/MODIS_NDVI/NDVI2022/Bischof_calculations/MOD09Q1_"
+shift <- st_as_sf(test$geometry + set.sf$geometry[1], crs = proj)
+orig <- test$geometry
+shift2 <-  st_as_sf(test$geometry + set.sf$geometry[2], crs = proj)
 
-year <- str_split(test$id_yr[1],"_")[[1]][2]
-
-
-
-#------------------------------------------------------#
-####  ####
-
-shift <- st_as_sf(test$geometry[1] + set.sf$geometry[1], crs = proj)
-orig <- test$geometry[1]
-shift2 <-  st_as_sf(test$geometry[1] + set.sf$geometry[2], crs = proj)
-
-shift <- shift %>% st_cast("POINT")
+#shift <- shift %>% st_cast("POINT")
 
 
-mapview(shift) + mapview(orig) + mapview(shift2)
+mapview(shift, col.regions = "red") + mapview(orig) + mapview(shift2, col.regions = "black")
 
-
-#------------------------------------------------------#
-####  ####
-
-#------------------------------------------------------#
-####  ####
 

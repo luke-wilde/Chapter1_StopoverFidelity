@@ -380,12 +380,27 @@ fid3 <- IYD_mean_fidelity %>% drop_na(prev_Y_3) %>% dplyr::select(AID, curr_Y, i
 IYD_mean_fidelity_list <- list(fid1, fid2, fid3)
 
 
+#------------------------------------------------------#
+#### fidelity to route ####
+
+# COMMENTED FOR NOW, MOVING OVER TO DO THE STOPOVER FIDELITY
+
+#could easily write a local function -- perhaps at which scale?
+
+lst <- list(length(unique(data1$AID)), NA) #length(unique(data$AID))
+
+for(j in 1:length(unique(data1$AID))){
+  CalculateRouteFidelity(gps_name = data1 %>% filter(AID == unique(data1$AID)[j]) ,date_name = "POSIXct", id_name = "id_yr", buffer = 400)
+  lst[[j]] <- mat
+}
+
+lst
 
 
+#--------------------------#
+# Save progress ####
 
-#save.image("C:/Users/lwilde2/Documents/AdaptiveFidelity/Data/StopoverFidelity_2014t2022.RData")
-
-save(fid_list, so_fidelity, file = "C:/Users/lwilde2/Documents/AdaptiveFidelity/Data/Processed Data/Stopover Fidelity/FidelityMetrics_04092023.RData")
+#save(IYD_stop_fidelity_list, IYD_mean_fidelity_list, file = "C:/Users/lwilde2/Documents/Chapter2_StopoverFidelity/Chapter1_StopoverFidelity/Data/Stopover/FidelityMetrics_20230425.RData")
 
 
 
@@ -397,57 +412,52 @@ save(fid_list, so_fidelity, file = "C:/Users/lwilde2/Documents/AdaptiveFidelity/
 
 # NOT RUN BELOW ###
 
-#------------------------------------------------------#
-#### fidelity to route ####
 
-# COMMENTED FOR NOW, MOVING OVER TO DO THE STOPOVER FIDELITY
+#save(lst, file = "C:/Users/lwilde2/Documents/AdaptiveFidelity/Data/FidelityMetrics/IndividualRouteOverlap.RData")
 
-# #could easily write a local function -- perhaps at which scale?
-# 
-# lst <- list(length(unique(data$AID)), NA) #length(unique(data$AID))
-# 
-# for(j in 1:length(unique(data$AID))){
-# CalculateRouteFidelity(gps_name = data %>% filter(AID == unique(data$AID)[j]) ,date_name = "POSIXct", id_name = "id_yr", buffer = 400)
-#   lst[[j]] <- mat
-# }
-# 
-# lst
-# 
-# save(lst, file = "C:/Users/lwilde2/Documents/AdaptiveFidelity/Data/FidelityMetrics/IndividualRouteOverlap.RData")
-# 
-# 
-# load("C:/Users/lwilde2/Documents/AdaptiveFidelity/Data/FidelityMetrics/IndividualRouteOverlap.RData")
-# 
-# #keep only animals with 3 yrs data
-# lst_3yr <- lst[sapply(lst, nrow) >= 2 ]
-# 
-# df <- data.frame(matrix(nrow = length(lst_3yr), ncol = 3, data = NA))
-# 
-# 
-# 
-# for(i in 1:length(lst_3yr)){
-# 
-#   df[i,1] <- lst_3yr[[i]]$AID[1]
-#   df[i,2] <- median(as.numeric(lst_3yr[[i]]$Overlap))
-#   df[i,3] <- sd(as.numeric(lst_3yr[[i]]$Overlap))
-# }
-# 
-# names(df) <- c("AID", "median", "sd")
-# head(df)
-# 
-# ggplot(df) + geom_histogram(aes(x = median), binwidth = .02, fill = NA, color = "black")
-# summary(df)
-# bins <- sort(c(seq(0.2,0.76,by=0.02)))
-# RouteFidelity <- hist(df$median,breaks=bins,plot = F)
-# RouteFidelity <- RouteFidelity$density / 0.02
-# 
-# plot(RouteFidelity, type="l")
-# 
-# RF_med <- ggplot(df) + geom_density(aes(x = median, y = ..count..), fill = "blue", alpha = .3, color = "purple", size = 1.2, bounds = c(0,1)) + lims(x = c(0,1)) + labs(y = "Density", x = "% Fidelity") + theme_classic()
-# RF_sd <- ggplot(df) + geom_density(aes(x = sd, y = ..count..), fill = "green", alpha = .3, color = "orange", size = 1.2, bounds = c(0,1)) + lims(x = c(0,1)) + labs(y = "Density",x = "% Fidelity") + theme_classic()
-# 
-# plot1 <- RF_med + RF_sd
-# #ggsave(plot1, file = "C:/Users/lwilde2/Documents/AdaptiveFidelity/Outputs/RouteFidelity_20230227.png")
+
+
+
+
+
+
+
+
+
+
+
+load("C:/Users/lwilde2/Documents/AdaptiveFidelity/Data/FidelityMetrics/IndividualRouteOverlap.RData")
+
+#keep only animals with 3 yrs data
+lst_3yr <- lst[sapply(lst, nrow) >= 2 ]
+
+df <- data.frame(matrix(nrow = length(lst_3yr), ncol = 3, data = NA))
+
+
+
+for(i in 1:length(lst_3yr)){
+
+  df[i,1] <- lst_3yr[[i]]$AID[1]
+  df[i,2] <- median(as.numeric(lst_3yr[[i]]$Overlap))
+  df[i,3] <- sd(as.numeric(lst_3yr[[i]]$Overlap))
+}
+
+names(df) <- c("AID", "median", "sd")
+head(df)
+
+ggplot(df) + geom_histogram(aes(x = median), binwidth = .02, fill = NA, color = "black")
+summary(df)
+bins <- sort(c(seq(0.2,0.76,by=0.02)))
+RouteFidelity <- hist(df$median,breaks=bins,plot = F)
+RouteFidelity <- RouteFidelity$density / 0.02
+
+plot(RouteFidelity, type="l")
+
+RF_med <- ggplot(df) + geom_density(aes(x = median, y = ..count..), fill = "blue", alpha = .3, color = "purple", size = 1.2, bounds = c(0,1)) + lims(x = c(0,1)) + labs(y = "Density", x = "% Fidelity") + theme_classic()
+RF_sd <- ggplot(df) + geom_density(aes(x = sd, y = ..count..), fill = "green", alpha = .3, color = "orange", size = 1.2, bounds = c(0,1)) + lims(x = c(0,1)) + labs(y = "Density",x = "% Fidelity") + theme_classic()
+
+plot1 <- RF_med + RF_sd
+#ggsave(plot1, file = "C:/Users/lwilde2/Documents/AdaptiveFidelity/Outputs/RouteFidelity_20230227.png")
 
 
 
